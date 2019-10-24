@@ -4,7 +4,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ include "flink.fullname" . }}-jobmanager
+  name: {{ $fullName }}
   labels:
     app: flink
     component: jobmanager
