@@ -9,6 +9,13 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
-  flink-conf.yaml: {{ .Values.flinkConf }}
+  flink-conf.yaml: |+
+    jobmanager.rpc.address: {{ include "flink.fullname" . }}-jobmanager
+    taskmanager.numberOfTaskSlots: {{ .Values.taskmanager.numberOfTaskSlots }}
+    blob.server.port: 6124
+    jobmanager.rpc.port: 6123
+    taskmanager.rpc.port: 6122
+    jobmanager.heap.size: {{ .Values.jobmanager.heap.size }}
+    taskmanager.heap.size: {{ .Values.taskmanager.heap.size }}
   log4j.properties: {{ .Values.log4jProperties }}
 

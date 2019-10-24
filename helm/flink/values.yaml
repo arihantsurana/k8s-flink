@@ -47,14 +47,6 @@ tolerations: []
 
 affinity: {}
 
-flinkConf: |+
-  jobmanager.rpc.address: {{ include "flink.fullname" . }}-jobmanager
-  taskmanager.numberOfTaskSlots: 1
-  blob.server.port: 6124
-  jobmanager.rpc.port: 6123
-  taskmanager.rpc.port: 6122
-  jobmanager.heap.size: 1024m
-  taskmanager.heap.size: 1024m
 log4jProperties: |+
   log4j.rootLogger=INFO, file
   log4j.logger.akka=INFO
@@ -68,6 +60,7 @@ log4jProperties: |+
   log4j.logger.org.apache.flink.shaded.akka.org.jboss.netty.channel.DefaultChannelPipeline=ERROR, file
 
 jobManager:
+  heap.size: 1024m
   hpa:
     enabled: false
     minReplicas: 1
@@ -78,6 +71,8 @@ jobManager:
     requests:
 
 taskManager:
+  heap.size: 1024m
+  numberOfTaskSlots: 1
   hpa:
     enabled: false
     minReplicas: 1
