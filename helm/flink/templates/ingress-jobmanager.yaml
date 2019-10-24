@@ -4,9 +4,11 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
+  name: {{ include "flink.fullname" . }}-jobmanager
   labels:
-    app.kubernetes.io/name: {{ include "flink.name" . }}
+    app: flink
+    component: jobmanager
+    app.kubernetes.io/name: {{ include "flink.name" . }}-jobmanager
     helm.sh/chart: {{ include "flink.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}

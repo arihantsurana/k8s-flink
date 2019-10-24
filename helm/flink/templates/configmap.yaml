@@ -11,11 +11,11 @@ metadata:
 data:
   flink-conf.yaml: |+
     jobmanager.rpc.address: {{ include "flink.fullname" . }}-jobmanager
-    taskmanager.numberOfTaskSlots: {{ .Values.taskmanager.numberOfTaskSlots }}
+    taskmanager.numberOfTaskSlots: {{ .Values.taskManager.numberOfTaskSlots }}
     blob.server.port: 6124
     jobmanager.rpc.port: 6123
     taskmanager.rpc.port: 6122
-    jobmanager.heap.size: {{ .Values.jobmanager.heap.size }}
-    taskmanager.heap.size: {{ .Values.taskmanager.heap.size }}
+    jobmanager.heap.size: {{ .Values.jobManager.heapSize }}
+    taskmanager.heap.size: {{ .Values.taskManager.heapSize }}
   log4j.properties: {{ .Values.log4jProperties }}
 

@@ -2,7 +2,14 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "radagast.fullname" . }}-taskmanager
+  name: {{ include "flink.fullname" . }}-taskmanager
+  labels:
+    app: flink
+    component: taskmanager
+    app.kubernetes.io/name: {{ include "flink.name" . }}-taskmanager
+    helm.sh/chart: {{ include "flink.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1beta2
