@@ -1,0 +1,89 @@
+# Default values for flink.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: flink
+  tag: latest
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  path: /
+  hosts:
+    - chart-example.local
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+flinkConf: |+
+  jobmanager.rpc.address: {{ include "flink.fullname" . }}-jobmanager
+  taskmanager.numberOfTaskSlots: 1
+  blob.server.port: 6124
+  jobmanager.rpc.port: 6123
+  taskmanager.rpc.port: 6122
+  jobmanager.heap.size: 1024m
+  taskmanager.heap.size: 1024m
+log4jProperties: |+
+  log4j.rootLogger=INFO, file
+  log4j.logger.akka=INFO
+  log4j.logger.org.apache.kafka=INFO
+  log4j.logger.org.apache.hadoop=INFO
+  log4j.logger.org.apache.zookeeper=INFO
+  log4j.appender.file=org.apache.log4j.FileAppender
+  log4j.appender.file.file=${log.file}
+  log4j.appender.file.layout=org.apache.log4j.PatternLayout
+  log4j.appender.file.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p %-60c %x - %m%n
+  log4j.logger.org.apache.flink.shaded.akka.org.jboss.netty.channel.DefaultChannelPipeline=ERROR, file
+
+jobManager:
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    cpu:
+    memory:
+    # average http requests per second per pod (k8s-prometheus-adapter)
+    requests:
+
+taskManager:
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    cpu:
+    memory:
+    # average http requests per second per pod (k8s-prometheus-adapter)
+    requests:
+

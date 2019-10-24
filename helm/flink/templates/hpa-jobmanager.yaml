@@ -1,0 +1,32 @@
+{{- if .Values.jobManager.hpa.enabled -}}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "radagast.fullname" . }}-jobmanager
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1beta2
+    kind: Deployment
+    name: {{ include "radagast.fullname" . }}-jobmanager
+  minReplicas: {{ .Values.jobManager.hpa.minReplicas }}
+  maxReplicas: {{ .Values.jobManager.hpa.maxReplicas }}
+  metrics:
+  {{- if .Values.jobManager.hpa.memory }}
+  - type: Resource
+    resource:
+      name: memory
+      targetAverageValue: {{ .Values.jobManager.hpa.memory }}
+  {{- end }}
+  {{- if .Values.jobManager.hpa.cpu }}
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: {{ .Values.jobManager.hpa.cpu }}
+  {{- end }}
+  {{- if .Values.jobManager.hpa.requests }}
+  - type: Pod
+      pods:
+        metricName: http_requests
+        targetAverageValue: {{ .Values.jobManager.hpa.requests }}
+  {{- end }}
+{{- end }}

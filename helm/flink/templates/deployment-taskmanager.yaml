@@ -1,0 +1,74 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ include "flink.fullname" . }}-taskmanager
+  labels:
+    app: flink
+    component: taskmanager
+    app.kubernetes.io/name: {{ include "flink.name" . }}
+    helm.sh/chart: {{ include "flink.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  volumes:
+  - name: flink-config-volume
+    configMap:
+      name: {{ include "flink.fullname" . }}
+      items:
+      - key: flink-conf.yaml
+        path: flink-conf.yaml
+      - key: log4j.properties
+        path: log4j.properties
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "flink.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "flink.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          workingDir: /opt/flink
+          command: ["/bin/bash", "-c", "$FLINK_HOME/bin/taskmanager.sh start; \
+            while :;
+            do
+             if [[ -f $(find log -name '*taskmanager*.log' -print -quit) ]];
+               then tail -f -n +1 log/*taskmanager*.log;
+             fi;
+            done"]
+          ports:
+            - containerPort: 6122
+              name: rpc
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: 6122
+            initialDelaySeconds: 30
+            periodSeconds: 60
+          readinessProbe:
+            tcpSocket:
+              port: 6122
+            initialDelaySeconds: 30
+            periodSeconds: 60
+          volumeMounts:
+          - name: flink-config-volume
+            mountPath: /opt/flink/conf
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
