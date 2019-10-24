@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "flink.fullname" . }}-jobmanager
+  name: {{ $fullName }}-jobmanager
   labels:
     app.kubernetes.io/name: {{ include "flink.name" . }}
     helm.sh/chart: {{ include "flink.chart" . }}

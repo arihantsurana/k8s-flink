@@ -31,7 +31,7 @@ spec:
         paths:
           - path: {{ $ingressPath }}
             backend:
-              serviceName: {{ include "flink.fullname" . }}-jobmanager
+              serviceName: {{ $fullName }}-jobmanager
               servicePort: ui
   {{- end }}
 {{- end }}
