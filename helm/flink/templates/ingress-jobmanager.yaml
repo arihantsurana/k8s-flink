@@ -6,9 +6,6 @@ kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-    app: flink
-    component: jobmanager
-    app.kubernetes.io/name: {{ include "flink.name" . }}-jobmanager
     helm.sh/chart: {{ include "flink.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
