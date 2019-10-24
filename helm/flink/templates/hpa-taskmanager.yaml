@@ -14,7 +14,7 @@ spec:
   scaleTargetRef:
     apiVersion: apps/v1beta2
     kind: Deployment
-    name: {{ include "radagast.fullname" . }}-taskmanager
+    name: {{ include "flink.fullname" . }}-taskmanager
   minReplicas: {{ .Values.taskManager.hpa.minReplicas }}
   maxReplicas: {{ .Values.taskManager.hpa.maxReplicas }}
   metrics:

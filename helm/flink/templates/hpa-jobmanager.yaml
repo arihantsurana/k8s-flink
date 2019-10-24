@@ -14,7 +14,7 @@ spec:
   scaleTargetRef:
     apiVersion: apps/v1beta2
     kind: Deployment
-    name: {{ include "radagast.fullname" . }}-jobmanager
+    name: {{ include "flink.fullname" . }}-jobmanager
   minReplicas: {{ .Values.jobManager.hpa.minReplicas }}
   maxReplicas: {{ .Values.jobManager.hpa.maxReplicas }}
   metrics:
