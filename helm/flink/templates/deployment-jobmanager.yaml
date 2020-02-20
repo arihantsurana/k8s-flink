@@ -10,15 +10,6 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  volumes:
-  - name: flink-config-volume
-    configMap:
-      name: {{ include "flink.fullname" . }}
-      items:
-      - key: flink-conf.yaml
-        path: flink-conf.yaml
-      - key: log4j.properties
-        path: log4j.properties
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "flink.name" . }}-jobmanager
@@ -29,6 +20,15 @@ spec:
         app.kubernetes.io/name: {{ include "flink.name" . }}-jobmanager
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      volumes:
+        - name: flink-config-volume
+          configMap:
+            name: {{ include "flink.fullname" . }}
+            items:
+              - key: flink-conf.yaml
+                path: flink-conf.yaml
+              - key: log4j.properties
+                path: log4j.properties
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
