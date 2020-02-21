@@ -32,6 +32,6 @@ spec:
           - path: {{ $ingressPath }}
             backend:
               serviceName: {{ $fullName }}-jobmanager
-              servicePort: ui
+              servicePort: 8081
   {{- end }}
 {{- end }}
