@@ -21,7 +21,9 @@ spec:
       protocol: TCP
       port: 8081
   selector:
-    app.kubernetes.io/name: {{ include "flink.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
     app: flink
     component: jobmanager
+    app.kubernetes.io/name: {{ include "flink.name" . }}-jobmanager
+    helm.sh/chart: {{ include "flink.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
